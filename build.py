@@ -12,9 +12,6 @@ import time
 cxx_compiler = ""
 cxx_file_extension = ".cc"
 
-srcFiles = os.listdir("./src")
-buildFiles = os.listdir("./build")
-
 #
 # example entry in "files" list in projectInfo
 # {
@@ -52,10 +49,14 @@ if __name__ == "__main__":
     if not os.path.exists("./src"):
         print("ERROR No src directory detected")
         exit(1)
+    srcFiles = os.listdir("./src")
+
     
     if not os.path.exists("./build"):
         print("No build directory detected, creating one")
         os.makedirs("./build")
+    buildFiles = os.listdir("./build")
+
     
     # limake-project.json stores when files were last compiled so we know which ones need to be recompiled
     if not os.path.exists("./limake-project.json"):
