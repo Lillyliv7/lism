@@ -30,7 +30,7 @@ projectInfo = {
 if __name__ == "__main__":
     # in older python versions linux can be detected as "linux2"
     if sys.platform != "linux" and sys.platform != "linux2":
-        print("ERROR OS not detected as linux, please compile on linux")
+        print("ERROR OS not detected as linux")
         exit(1)
     # check if clang is installed, if so use it
     # clang is breaking for me so comment this out
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         exit(1)
     
     if not os.path.exists("./src"):
-        print("No src directory detected, exiting")
+        print("ERROR No src directory detected")
         exit(1)
     
     if not os.path.exists("./build"):
@@ -100,7 +100,7 @@ if __name__ == "__main__":
             print("Compiling " + projectInfo["files"][i]["file_path"])
             # actually compile with clang/c++ and check result
             if os.system(cxx_compiler + " -c " + projectInfo["files"][i]["file_path"] + " -o ./build/" + projectInfo["files"][i]["file_path"].split("/")[-1].split(".")[0] + ".o") >> 8 != 0:
-                print("Compiler error, exiting :(")
+                print("ERROR Compiler error")
                 exit(1)
 
     # get all .o files in build to link
@@ -113,7 +113,7 @@ if __name__ == "__main__":
     # link main executable
     print("Compiling ./build/lism")
     if os.system(cxx_compiler + " -o ./build/lism " + objectFilesToLink) >> 8 != 0:
-        print("Linking error, stopping :(")
+        print("ERROR Linking error")
         exit(1)
 
     # rewrite projectInfo
