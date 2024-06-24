@@ -1,7 +1,13 @@
 #include <iostream>
-#include "./include/test.hh"
+#include <fstream>
+#include <string>
+#include <stdint.h>
+
+#include "./include/generate_elf.hh"
 
 int main(int argc, char** argv) {
     std::cout << "Starting Assembly" << std::endl;
-    printalso();
+
+    ELFFormat myelf("hi");
+    myelf.writeFile();
 }

@@ -2,3 +2,4 @@
 ./build/*
 limake-project.json
 .vscode
+.testing
