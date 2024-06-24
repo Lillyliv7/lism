@@ -12,6 +12,9 @@ import time
 cxx_compiler = ""
 cxx_file_extension = ".cc"
 
+srcFiles = os.listdir("./src")
+buildFiles = os.listdir("./build")
+
 #
 # example entry in "files" list in projectInfo
 # {
@@ -64,8 +67,6 @@ if __name__ == "__main__":
         project_file = open("./limake-project.json", "r")
         projectInfo = json.loads(project_file.read())
         project_file.close()
-    
-    srcFiles = os.listdir("./src")
 
     # add all new c++ files in src to projectInfo
     filesAdded = 0
@@ -79,18 +80,29 @@ if __name__ == "__main__":
             if not fileAlreadyExists:
                 projectInfo["files"].append({"file_path":"./src/"+srcFiles[i],"compiled_timestamp":0})
                 filesAdded += 1
-    
-    # check for deleted files
-    indexesToPop = []
-    for i in range(0, len(projectInfo["files"])):
-        if not os.path.isfile(projectInfo["files"][i]["file_path"]):
-            print("Detected \"" + projectInfo["files"][i]["file_path"] + "\" does not exist anymore, deleting from limake-project.json")
-            indexesToPop.append(i)
-    # remove deleted files from projectInfo
-    for i in range(0, len(indexesToPop)):
-        projectInfo["files"].pop(indexesToPop[i] - i)
-
     print("Added " +  str(filesAdded) + " file(s) to project")
+    
+    # check for deleted c++ files and remove from ProjectInfo
+    deletedFiles = 0
+    for i in range(0, len(projectInfo["files"])):
+        if not os.path.isfile(projectInfo["files"][i-deletedFiles]["file_path"]):
+            print("Detected \"" + projectInfo["files"][i-deletedFiles]["file_path"] + "\" does not exist anymore, deleting from limake-project.json")
+            # indexesToPop.append(i)
+            projectInfo["files"].pop(i - deletedFiles)
+            deletedFiles+=1
+    
+    # remove junk .o files in build folder (from deleting .cc files that had been compiled)
+    for i in range(0, len(buildFiles)):
+        notStrayObjectFile = False
+        if buildFiles[i].endswith(".o"):
+            for j in range(0, len(projectInfo["files"])):
+                if buildFiles[i].split(".")[0] == projectInfo["files"][j]["file_path"].split("/")[-1].split(".")[0]:
+                    notStrayObjectFile = True
+            if not notStrayObjectFile:
+                print("Stray object file " + buildFiles[i] + " found, deleting")
+                os.remove("./build/" + buildFiles[i])
+    # update build files because we might have changed it
+    buildFiles = os.listdir("./build")
 
     # compile all files in projectInfo
     for i in range(0, len(projectInfo["files"])):
@@ -104,7 +116,6 @@ if __name__ == "__main__":
                 exit(1)
 
     # get all .o files in build to link
-    buildFiles = os.listdir("./build")
     objectFilesToLink = ""
     for i in range(0, len(buildFiles)):
         if buildFiles[i].endswith(".o"):
