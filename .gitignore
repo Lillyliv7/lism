@@ -1,0 +1,14 @@
+./build
+./build/*
+./build/
+build
+build/
+build/*
+limake-project.json
+.vscode
+./testing
+./testing/
+./testing/*
+testing
+testing/
+testing/*
