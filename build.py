@@ -121,12 +121,3 @@ if __name__ == "__main__":
     project_file.write(json.dumps(projectInfo))
     project_file.close()
     exit(0)
-
-
-echo "# lism" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/Lillyliv7/lism.git
-git push -u origin main
