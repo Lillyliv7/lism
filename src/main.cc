@@ -8,6 +8,6 @@
 int main(int argc, char** argv) {
     std::cout << "Starting Assembly" << std::endl;
 
-    ELFFormat myelf("hii");
+    ELFFormat myelf("hi");
     myelf.writeFile();
 }
